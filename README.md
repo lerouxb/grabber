@@ -1,0 +1,100 @@
+screenshotter
+=============
+
+Installation
+------------
+
+See sharp's instructions for installing
+[libvips](https://github.com/lovell/sharp#installation). Sharp is used to
+resize screenshots and turn them into JPEG, PNG or WebP images.
+
+After that a simple `npm install screenshotter` should do the trick.
+ChromeDriver is straight-forward to install via npm install, but if you want to
+use Firefox to take screenshots you'll have to be running Selenium server.
+
+Try out some of these guides for getting Xvfb and Selenium running so that you
+can take "headless" screenshots in a Linux environment. You probably don't want
+to be screenshotting in OSX or Windows or a real (non-framebuffer) X server
+because the browser window is going to pop up.
+
+* [Running Headless Selenium with Chrome](http://www.chrisle.me/2013/08/running-headless-selenium-with-chrome/)
+* [Headless Chrome/Firefox testing in NodeJS with Selenium and Xvfb](http://codeutopia.net/blog/2013/07/13/headless-chromefirefox-testing-in-nodejs-with-selenium-and-xvfb/)
+* [Use Xvfb, Selenium and Chrome to drive a web browser in PHP](http://www.yann.com/en/use-xvfb-selenium-and-chrome-to-drive-a-web-browser-in-php-23/08/2012.html)
+
+
+Limitations
+-----------
+
+Both Firefox and Chrome seem to have the limitation that you can't resize the
+browser window to be larger than the screen, so you're limited by your screen
+dimensions. In Linux you can probably get around this to some extent using
+Xvfb.
+
+Chrome cannot take a screenshot of the full page and will only screenshot the
+visible portion. Firefox can screenshot the entire page, but this library
+doesn't allow for that just yet.
+
+
+Usage
+-----
+
+```coffeescript
+screenshotter = require 'screenshotter'
+
+chromeOptions =
+  hostname: "127.0.0.1"
+  port: 9515
+  pathname: "/wd/hub"
+  args: [
+    "--url-base=/wd/hub"
+    "--port=" + 9515
+    "--verbose"
+  ]
+
+browser = screenshotter.chrome.init(chromeOptions, (err, browser) ->
+  return console.error(err) if err
+
+  screenshotOptions =
+    url: 'http://www.google.com/'
+    width: 1024
+    height: 768
+    resize: 512
+    quality: 80
+
+    # see browser.waitForConditionInBrowser in wd
+    condition: "document.querySelectorAll('.foo').length > 0"
+
+    # see wd for documentation on browser
+    cleanup: (browser, cb) ->
+      # Do something with browser like dismiss popups or scroll down to the
+      # button of the page or whatever you want to do before you take a
+      # screenshot.
+      cb() # remember to call cb() when you're done
+
+    # save the file
+    out: 'google.jpg'
+
+  screenshotter.screenshot browser, screenshotOptions, (err, image) ->
+    return console.error(err) if err
+    # image now contains an instance of a sharp image object thing that you can
+    # then do something with if you want. Probably not necesary if you passed
+    # in an out parameter
+```
+
+Examples
+--------
+
+Most of the action happens in the examples/ directory.
+
+*chrome_screenshot.coffee* and *firefox_screenshot.coffee* are command-line
+utilities to take screenshots.
+
+express/ contains an example screenshot web service which you should probably not
+run at a live address because it's not likely to scale very well. It is for
+demonstration purposes only.
+
+For both these tools the parameters are url, width, height, resize and quality.
+
+The CLI utilities also take an --out=filename.(png|jpeg|webp) parameter and
+support a -t parameter for testing with [Thing's](http://thing.io/) settings.
+

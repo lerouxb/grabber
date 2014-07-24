@@ -1,0 +1,16 @@
+{
+  "name": "screenshot",
+  "version": "0.0.0",
+  "description": "Take screenshots of web pages.",
+  "main": "screenshot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Le Roux Bodenstein",
+  "license": "MIT",
+  "dependencies": {
+    "wd": "^0.3.3",
+    "chromedriver": "^2.10.0-1",
+    "sharp": "^0.5.2"
+  }
+}
