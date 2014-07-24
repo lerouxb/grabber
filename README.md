@@ -74,7 +74,7 @@ browser = grabber.chrome.init(chromeOptions, (err, browser) ->
     # save the file
     out: 'google.jpg'
 
-  grabber.screenshot browser, screenshotOptions, (err, image) ->
+  grabber.commands.screenshot browser, screenshotOptions, (err, image) ->
     return console.error(err) if err
     # image now contains an instance of a sharp image object thing that you can
     # then do something with if you want. Probably not necesary if you passed
