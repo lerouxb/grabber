@@ -1,5 +1,5 @@
 {
-  "name": "screenshot",
+  "name": "screenshotter",
   "version": "0.0.0",
   "description": "Take screenshots of web pages.",
   "main": "screenshot.js",
