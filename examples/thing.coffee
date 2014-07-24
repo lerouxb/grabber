@@ -9,6 +9,8 @@ getOptions = ->
     width: 1136
     height: 852
     resize: 568
+    crop: false # set to true to not get full height from firefox.
+                # (crop is ignored for chrome anyway)
     condition: "$('body.ready').length == 1" # my body is ready
     cleanup: cleanPreview
   opts

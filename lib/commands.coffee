@@ -10,7 +10,8 @@ screenshot = exports.screenshot = (browser, opts, cb) ->
   # opts.resize:    optional. width to resize the image to
   # opts.quality:   optional. defaults to 75
   # opts.condition: optional. js expression for browser
-  # opts.cleanup:   option. async function to run. gets browser parameter
+  # opts.cleanup:   optional. async function to run. gets browser parameter
+  # opts.crop:      optional boolean. ignored for chrome
   # opts.out:       optional filename to save the screenshot to.
   # cb(error, image) where image is a a sharp image object thing
 
@@ -40,13 +41,31 @@ screenshot = exports.screenshot = (browser, opts, cb) ->
         #image.bicubicInterpolation()
         image.nohaloInterpolation()
 
-        # TODO: crop for Firefox, auto height for Firefox
+        browserName = browser.defaultCapabilities.browserName
+        if browserName == 'firefox' and opts.crop
+          # we have to crop so that we don't screenshot the entire page, but
+          # sharp can't chain multiple resize commands, so..
+          console.log "cropping..."
+          # TODO: there's no way to tell sharp to crop the top part rather than
+          # the center, so this is effectively broken
+          image.crop().resize(opts.width, opts.height).toBuffer (err, buff) ->
+            return callback(err) if err
+            # make a new image so we can continue resizing
+            image = sharp buff
+            continueAfterCrop image
 
-        if opts.resize
-          console.log "resizing..."
-          continueAfterResize(image.resize(opts.resize))
         else
-          continueAfterResize(image)
+          # either this is chrome which doesn't support auto height anyway OR
+          # it is firefox and we don't want the screenshot cropped to the
+          # screen size
+          continueAfterCrop image
+
+  continueAfterCrop = (image) ->
+    if opts.resize
+      console.log "resizing..."
+      continueAfterResize(image.resize(opts.resize))
+    else
+      continueAfterResize(image)
 
   continueAfterResize = (image) ->
     # not used for lossless png

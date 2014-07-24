@@ -89,7 +89,7 @@ Most of the action happens in the examples/ directory.
 **chrome_screenshot.coffee** and **firefox_screenshot.coffee** are command-line
 utilities to take screenshots.
 
-The parameters are url, width, height, resize and quality. The CLI utilities
+The parameters are url, width, height, resize, quality, crop. The CLI utilities
 also take an --out=filename.(png|jpeg|webp) parameter and support a -t
 parameter for testing with [Thing's](http://thing.io/) settings.
 
