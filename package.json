@@ -1,8 +1,8 @@
 {
-  "name": "screenshotter",
+  "name": "grabber",
   "version": "0.0.0",
   "description": "Take screenshots of web pages.",
-  "main": "screenshot.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

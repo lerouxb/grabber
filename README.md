@@ -1,5 +1,5 @@
-screenshotter
-=============
+grabber
+=======
 
 Installation
 ------------
@@ -8,7 +8,7 @@ See sharp's instructions for installing
 [libvips](https://github.com/lovell/sharp#installation). Sharp is used to
 resize screenshots and turn them into JPEG, PNG or WebP images.
 
-After that a simple `npm install screenshotter` should do the trick.
+After that a simple `npm install grabber` should do the trick.
 ChromeDriver is straight-forward to install via npm install, but if you want to
 use Firefox to take screenshots you'll have to be running Selenium server.
 
@@ -39,7 +39,7 @@ Usage
 -----
 
 ```coffeescript
-screenshotter = require 'screenshotter'
+grabber = require 'grabber'
 
 chromeOptions =
   hostname: "127.0.0.1"
@@ -51,7 +51,7 @@ chromeOptions =
     "--verbose"
   ]
 
-browser = screenshotter.chrome.init(chromeOptions, (err, browser) ->
+browser = grabber.chrome.init(chromeOptions, (err, browser) ->
   return console.error(err) if err
 
   screenshotOptions =
@@ -74,7 +74,7 @@ browser = screenshotter.chrome.init(chromeOptions, (err, browser) ->
     # save the file
     out: 'google.jpg'
 
-  screenshotter.screenshot browser, screenshotOptions, (err, image) ->
+  grabber.screenshot browser, screenshotOptions, (err, image) ->
     return console.error(err) if err
     # image now contains an instance of a sharp image object thing that you can
     # then do something with if you want. Probably not necesary if you passed
