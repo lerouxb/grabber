@@ -1,7 +1,7 @@
 cleanPreview = (browser, cb) ->
   expression = "$('button.remove-bar').click(); "+
                "$('html,body').css('overflow', 'hidden')"
-  browser.safeExecute expression, cb
+  browser.execute expression, cb
 
 getOptions = ->
   # thing.io options for testing https://thing.(io|dev)/$$$/pages/view/$$$
