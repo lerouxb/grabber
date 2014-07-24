@@ -86,15 +86,10 @@ Examples
 
 Most of the action happens in the examples/ directory.
 
-*chrome_screenshot.coffee* and *firefox_screenshot.coffee* are command-line
+**chrome_screenshot.coffee** and **firefox_screenshot.coffee** are command-line
 utilities to take screenshots.
 
-express/ contains an example screenshot web service which you should probably not
-run at a live address because it's not likely to scale very well. It is for
-demonstration purposes only.
-
-For both these tools the parameters are url, width, height, resize and quality.
-
-The CLI utilities also take an --out=filename.(png|jpeg|webp) parameter and
-support a -t parameter for testing with [Thing's](http://thing.io/) settings.
+The parameters are url, width, height, resize and quality. The CLI utilities
+also take an --out=filename.(png|jpeg|webp) parameter and support a -t
+parameter for testing with [Thing's](http://thing.io/) settings.
 
