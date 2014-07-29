@@ -4,7 +4,7 @@ exports = module.exports
 
 
 screenshot = exports.screenshot = (browser, opts, cb) ->
-  # opts.url:       required
+  # opts.url:       optional. don't specify if the page is already loaded
   # opts.width:     optional. defaults to 1024
   # opts.height:    optional. defaults to 768
   # opts.resize:    optional. width to resize the image to
@@ -18,6 +18,29 @@ screenshot = exports.screenshot = (browser, opts, cb) ->
   opts.width ?= 1024
   opts.height ?= 768
   opts.quality ?= 80
+
+  continueAfterLoad = ->
+    if opts.condition
+      console.log "waiting for #{opts.condition}"
+
+      # should be enough...
+      # (no idea why I have to set this here AND in waitForConditionInBrowser)
+      browser.setAsyncScriptTimeout(60000)
+
+      # total timeout, then poll interval
+      browser.waitForConditionInBrowser opts.condition, 60000, 100, (err, b) ->
+        return cb(err) if err
+
+        if b
+          continueAfterWait()
+
+        else
+          # I don't think it should be possible to get there because it should
+          # just cause a timeout error, no?
+          console.log "condition not met"
+          cb new Error("condition not met")
+    else
+      continueAfterWait()
 
   continueAfterWait = ->
     if opts.cleanup
@@ -79,32 +102,15 @@ screenshot = exports.screenshot = (browser, opts, cb) ->
     else
       cb(null, image)
 
-  console.log "loading #{opts.url}..."
-  browser.get opts.url, (err) ->
-    return cb(err) if err
-
-    if opts.condition
-      console.log "waiting for #{opts.condition}"
-
-      # should be enough...
-      # (no idea why I have to set this here AND in waitForConditionInBrowser)
-      browser.setAsyncScriptTimeout(60000)
-
-      # total timeout, then poll interval
-      browser.waitForConditionInBrowser opts.condition, 60000, 100, (err, b) ->
-        return cb(err) if err
-
-        if b
-          continueAfterWait()
-
-        else
-          # I don't think it should be possible to get there because it should
-          # just cause a timeout error, no?
-          console.log "condition not met"
-          cb new Error("condition not met")
-    else
-      continueAfterWait()
-
+  if opts.url
+    console.log "loading #{opts.url}..."
+    browser.get opts.url, (err) ->
+      return cb(err) if err
+      continueAfterLoad()
+  else
+    # you could load the page once, then take multiple screenshots
+    # (for example)
+    continueAfterLoad()
 
 getDimensions = exports.getDimensions = (browser, cb) ->
   expression = "$w = $(window); [$w.width(), $w.height()]"
@@ -115,8 +121,6 @@ getDimensions = exports.getDimensions = (browser, cb) ->
       cb null, dimensions[0], dimensions[1]
 
 resizeTo = exports.resizeTo = (browser, targetWidth, targetHeight, cb) ->
-  # TODO: add support for "auto" height. (Firefox only)
-
   # set the window dimensions
   console.log "resizing to", targetWidth, targetHeight
   browser.setWindowSize targetWidth, targetHeight, ->
