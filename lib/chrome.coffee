@@ -1,3 +1,5 @@
+# This file is based on https://gist.github.com/malandrew/5e4a7a30a0706ef50c0c
+
 wd = require "wd"
 spawn = require("child_process").spawn
 chromedriver = require "chromedriver"
