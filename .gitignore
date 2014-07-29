@@ -6,3 +6,7 @@
 ._*
 node_modules
 *.log
+*.png
+*.jpg
+*.jpeg
+*.webp
