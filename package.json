@@ -14,7 +14,6 @@
   "license": "MIT",
   "dependencies": {
     "wd": "^0.3.3",
-    "chromedriver": "^2.10.0-1",
     "sharp": "^0.5.2"
   }
 }

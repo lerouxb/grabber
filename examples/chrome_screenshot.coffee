@@ -6,6 +6,7 @@ cli = require './cli'
 # don't do anything unless we executed this module directly
 unless module.parent
   opts =
+    startChrome: true
     hostname: "127.0.0.1"
     port: 9515
     pathname: "/wd/hub"

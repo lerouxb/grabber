@@ -1,9 +1,6 @@
 # This file is based on https://gist.github.com/malandrew/5e4a7a30a0706ef50c0c
 
 wd = require "wd"
-spawn = require("child_process").spawn
-chromedriver = require "chromedriver"
-
 
 chromedriverIsReady = (opts, stdout) ->
   return false if stdout.indexOf("Starting ChromeDriver") == -1
@@ -12,6 +9,35 @@ chromedriverIsReady = (opts, stdout) ->
   true
 
 init = (opts, callback) ->
+  chrome = null
+
+  continueAfterStart = ->
+    browser = wd.remote(
+      hostname: opts.hostname
+      port: opts.port
+      pathname: opts.pathname
+    )
+
+    # convenient method so we don't have to pass 'chrome' around
+    browser.exit = ->
+      browser.quit ->
+        chrome.kill("SIGHUP") if opts.startChrome
+
+    browser.init
+      browserName: "chrome"
+      chromeOptions:
+        args: ['--test-type']
+    , (err) ->
+      callback(err, browser)
+
+  return continueAfterStart() unless opts.startChrome
+
+  # ----
+
+  # start chrome in a subprocess first and only connect to it once it runs
+  spawn = require("child_process").spawn
+  chromedriver = require "chromedriver"
+
   chrome = spawn(chromedriver.path, opts.args)
   started = false
 
@@ -27,22 +53,7 @@ init = (opts, callback) ->
 
     console.log "started"
     started = true
-    browser = wd.remote(
-      hostname: opts.hostname
-      port: opts.port
-      pathname: opts.pathname
-    )
-
-    # convenient method so we don't have to pass 'chrome' around
-    browser.exit = ->
-      browser.quit -> chrome.kill("SIGHUP")
-
-    browser.init
-      browserName: "chrome"
-      chromeOptions:
-        args: ['--test-type']
-    , (err) ->
-      callback(err, browser)
+    continueAfterStart()
 
   chrome.stderr.on "data", (data) ->
     #console.error ""+data

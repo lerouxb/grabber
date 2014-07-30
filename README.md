@@ -12,6 +12,11 @@ After that a simple `npm install grabber` should do the trick.
 ChromeDriver is straight-forward to install via npm install, but if you want to
 use Firefox to take screenshots you'll have to be running Selenium server.
 
+If you want ChromeDriver to be started by grabber.chrome you'll also have to
+`npm install chromedriver`. It is a relatively large and platform-dependent
+dependency, so it isn't in package.json. Alternatively you can keep it running
+in the background just like you would with the Selenium server.
+
 Try out some of these guides for getting Xvfb and Selenium running so that you
 can take "headless" screenshots in a Linux environment. You probably don't want
 to be screenshotting in OSX or Windows or a real (non-framebuffer) X server
