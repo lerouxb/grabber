@@ -47,6 +47,7 @@ Usage
 grabber = require 'grabber'
 
 chromeOptions =
+  startChrome: false # set to true to start chromedriver in a subprocess
   hostname: "127.0.0.1"
   port: 9515
   pathname: "/wd/hub"
