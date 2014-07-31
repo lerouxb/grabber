@@ -3,8 +3,9 @@ wd = require "wd"
 init = (opts, callback) ->
   browser = wd.remote(opts)
 
-  browser.exit = ->
-    browser.quit()
+  browser.exit = (cb) ->
+    cb ?= ->
+    browser.quit cb
 
   browser.init
     browserName: "firefox"

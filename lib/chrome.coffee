@@ -19,9 +19,10 @@ init = (opts, callback) ->
     )
 
     # convenient method so we don't have to pass 'chrome' around
-    browser.exit = ->
-      browser.quit()
-      chrome.kill("SIGHUP") if opts.startChrome
+    browser.exit = (cb) ->
+      browser.quit ->
+        chrome.kill("SIGHUP") if opts.startChrome
+        cb() if cb
 
     browser.init
       browserName: "chrome"
