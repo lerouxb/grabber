@@ -23,14 +23,6 @@ init = (opts, callback) ->
       browser.quit()
       chrome.kill("SIGHUP") if opts.startChrome
 
-    process.on 'exit', ->
-     console.log "exitting..."
-     browser.exit()
-
-    process.on 'uncaughtException', ->
-     console.log "uncaught exception..."
-     browser.exit()
-
     browser.init
       browserName: "chrome"
       chromeOptions:
