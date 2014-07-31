@@ -20,8 +20,16 @@ init = (opts, callback) ->
 
     # convenient method so we don't have to pass 'chrome' around
     browser.exit = ->
-      browser.quit ->
-        chrome.kill("SIGHUP") if opts.startChrome
+      browser.quit()
+      chrome.kill("SIGHUP") if opts.startChrome
+
+    process.on 'exit', ->
+     console.log "exitting..."
+     browser.exit()
+
+    process.on 'uncaughtException', ->
+     console.log "uncaught exception..."
+     browser.exit()
 
     browser.init
       browserName: "chrome"
@@ -29,6 +37,7 @@ init = (opts, callback) ->
         args: ['--test-type']
     , (err) ->
       callback(err, browser)
+
 
   return continueAfterStart() unless opts.startChrome
 
