@@ -56,7 +56,7 @@ screenshot = exports.screenshot = (browser, opts, cb) ->
     resizeTo browser, opts.width, opts.height, ->
       console.log "screenshotting..."
       browser.takeScreenshot (err, base64Data) -> # err, base64Data
-        return callback(err) if err
+        return cb(err) if err
         image = sharp new Buffer(base64Data, 'base64')
 
         # this should probably be an option
@@ -72,7 +72,7 @@ screenshot = exports.screenshot = (browser, opts, cb) ->
           # TODO: there's no way to tell sharp to crop the top part rather than
           # the center, so this is effectively broken
           image.crop().resize(opts.width, opts.height).toBuffer (err, buff) ->
-            return callback(err) if err
+            return cb(err) if err
             # make a new image so we can continue resizing
             image = sharp buff
             continueAfterCrop image
