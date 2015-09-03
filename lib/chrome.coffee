@@ -27,7 +27,7 @@ init = (opts, callback) ->
     browser.init
       browserName: "chrome"
       chromeOptions:
-        args: ['--test-type']
+        args: ['--test-type', '--disable-impl-side-painting']
     , (err) ->
       callback(err, browser)
 
